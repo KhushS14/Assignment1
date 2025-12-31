@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Play, Sparkles, ArrowLeft, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { Sparkles, ArrowLeft, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import cluesoLogo from "@/assets/clueso-logo.svg";
@@ -74,19 +74,14 @@ export default function Auth() {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 mb-8">
-           <img
-  src={cluesoLogo}
-  alt="Clueso Logo"
-  className="w-12 h-12"
-/>
-
+            <img src={cluesoLogo} alt="Clueso Logo"className="w-12 h-12"/>
             <span className="text-2xl font-bold">Clueso</span>
           </Link>
 
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">
-              {isSignup ? 'Create your account' : 'Welcome back'}
+              {isSignup ? 'Create your account' : 'Sign in to Clueso'}
             </h1>
             <p className="text-muted-foreground">
               {isSignup
@@ -105,7 +100,7 @@ export default function Auth() {
                   <Input
                     id="name"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="Alex Smith"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="pl-10 h-12"
@@ -122,7 +117,7 @@ export default function Auth() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="john@example.com"
+                  placeholder="alex@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="pl-10 h-12"
