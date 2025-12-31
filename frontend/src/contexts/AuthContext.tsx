@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(false);
   }, []);
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string) => {
     // Mock signup (no backend)
     const mockUser = { email };
     const mockSession = { user: mockUser };
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return { data: mockSession, error: null };
   };
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string) => {
     // Mock login
     const mockUser = { email };
     const mockSession = { user: mockUser };

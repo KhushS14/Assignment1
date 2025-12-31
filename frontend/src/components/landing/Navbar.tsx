@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Play, Sparkles } from 'lucide-react';
+import { Menu, X, Sparkles } from 'lucide-react';
 import CluesoLogo from "@/assets/clueso-logo.svg";
 
 
