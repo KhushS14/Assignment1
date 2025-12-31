@@ -62,7 +62,7 @@ export default function FeedbackForm() {
     setSubmitting(true);
 
     try {
-      await fetch("https://assignment1-red-mu.vercel.app/api/feedback", {
+      await fetch("/api/ai/feedback-insights", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

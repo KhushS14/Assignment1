@@ -1,3 +1,4 @@
+// api/ai/feedback-insights.ts
 import Groq from "groq-sdk";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
@@ -9,15 +10,6 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
-  // ✅ CORS HEADERS
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -51,17 +43,16 @@ Feedback:
           `,
         },
       ],
-      temperature: 0.2,
     });
 
-    const raw = completion.choices[0].message.content || "";
-    const json = raw.match(/\{[\s\S]*\}/);
+    const raw = completion.choices[0].message.content ?? "";
+    const json = raw.match(/\{[\s\S]*\}/)?.[0];
 
-    if (!json) throw new Error("Invalid JSON from Groq");
+    if (!json) throw new Error("Invalid AI response");
 
-    return res.status(200).json(JSON.parse(json[0]));
-  } catch (err: unknown) {
+    res.status(200).json(JSON.parse(json));
+  } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
-    return res.status(500).json({ error: message });
+    res.status(500).json({ error: message });
   }
 }
