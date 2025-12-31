@@ -29,8 +29,7 @@ This project features a responsive UI,interactive dashboard, feedback tools, and
 
  🧱 Architecture Overview:
 
- Full stack app flowchart.png
-
+Assignment/fullstackapp.png
 
 ⚙️ Installation
 
@@ -61,6 +60,7 @@ npm run dev
 
 
   
+
 
 
 
