@@ -50,8 +50,7 @@ export default function CreateVideo() {
     title: '',
     description: '',
   });
-const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+
 
 const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
   const file = e.target.files?.[0];
@@ -65,15 +64,7 @@ const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
 };
 
 
- const handleThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  
 
-  const file = e.target.files?.[0];
-  if (file && file.type.startsWith("image/")) {
-    setThumbnailFile(file);
-    setThumbnailPreview(URL.createObjectURL(file));
-  }
-};
 
 
 
