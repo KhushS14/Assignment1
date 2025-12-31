@@ -8,10 +8,19 @@ type AIInsights = {
   suggestion: string;
 };
 
-export default function FeedbackForm() {
+type FeedbackPayload = {
+  type: string;
+  message: string;
+  insights: AIInsights | null;
+};
+
+type Props = {
+  onSubmitFeedback: (data: FeedbackPayload) => void;
+};
+
+export default function FeedbackForm({ onSubmitFeedback }: Props) {
   const [type, setType] = useState("bug");
   const [message, setMessage] = useState("");
-
   const [insights, setInsights] = useState<AIInsights | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -28,22 +37,16 @@ export default function FeedbackForm() {
         setAnalyzing(true);
 
         const res = await fetch("/api/ai/feedback-insights", {
-
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: message }),
-          }
-        );
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: message }),
+        });
 
         const data = await res.json();
 
-        // guard against backend error
-        if (data?.error) {
-          setInsights(null);
-          return;
+        if (!data?.error) {
+          setInsights(data);
         }
-
-        setInsights(data);
       } catch (err) {
         console.error("AI insight error:", err);
         setInsights(null);
@@ -55,38 +58,28 @@ export default function FeedbackForm() {
     return () => clearTimeout(timeout);
   }, [message]);
 
-  // ✅ SUBMIT FEEDBACK
-  const submitFeedback = async () => {
+  // ✅ SUBMIT FEEDBACK (FIXED)
+  const submitFeedback = () => {
     if (!message.trim()) return;
 
     setSubmitting(true);
 
-    try {
-      await fetch("/api/ai/feedback-insights", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type,
-          message,
-          insights,
-        }),
-      });
+    onSubmitFeedback({
+      type,
+      message,
+      insights,
+    });
 
-      // reset form
-      setMessage("");
-      setInsights(null);
-    } catch (err) {
-      console.error("Submit error:", err);
-    } finally {
-      setSubmitting(false);
-    }
+    // reset form
+    setMessage("");
+    setInsights(null);
+    setSubmitting(false);
   };
 
   return (
     <div className="bg-card border border-border rounded-xl p-6 space-y-4">
       <h2 className="text-lg font-semibold">Send Feedback</h2>
 
-      {/* Feedback Type */}
       <select
         value={type}
         onChange={(e) => setType(e.target.value)}
@@ -98,7 +91,6 @@ export default function FeedbackForm() {
         <option value="general">💬 General</option>
       </select>
 
-      {/* Message */}
       <textarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}
@@ -106,7 +98,6 @@ export default function FeedbackForm() {
         className="w-full min-h-[120px] rounded-md border border-border bg-background p-3"
       />
 
-      {/* 🔮 LIVE AI INSIGHTS */}
       <div className="rounded-lg border bg-muted p-4">
         {analyzing && (
           <p className="text-sm text-muted-foreground">
@@ -116,12 +107,8 @@ export default function FeedbackForm() {
 
         {insights && !analyzing && (
           <div className="space-y-2 text-sm">
-            <p>
-              <strong>Sentiment:</strong> {insights.sentiment}
-            </p>
-            <p>
-              <strong>Score:</strong> {insights.score}/5
-            </p>
+            <p><strong>Sentiment:</strong> {insights.sentiment}</p>
+            <p><strong>Score:</strong> {insights.score}/5</p>
 
             <div>
               <strong>Key Issues:</strong>
@@ -132,9 +119,7 @@ export default function FeedbackForm() {
               </ul>
             </div>
 
-            <p>
-              <strong>Suggestion:</strong> {insights.suggestion}
-            </p>
+            <p><strong>Suggestion:</strong> {insights.suggestion}</p>
           </div>
         )}
 
